@@ -1,0 +1,315 @@
+{
+	"info": {
+		"_postman_id": "75c1b5c2-9c5a-439f-b9d5-afc6930b1d65",
+		"name": "Clearpoint",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8056849"
+	},
+	"item": [
+		{
+			"name": "POST /api/todoItems",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"const jsonData = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Response has an itemID\", function () {",
+							"    pm.expect(jsonData).to.be.a('string');",
+							"    pm.collectionVariables.set(\"itemID\",jsonData);",
+							"    ",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "*/*"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"description\": \"test\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3002/api/todoItems",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"todoItems"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "toDoItems After POST",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let itemID = pm.collectionVariables.get(\"itemID\")",
+							"let jsonData = pm.response.json(); ",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Contains created object\", function() {",
+							"      ",
+							"    for (obj of jsonData){",
+							"        if (obj.id === itemID){",
+							"             pm.expect(obj.id).to.be.eq(itemID)",
+							"        }",
+							"    }",
+							"",
+							"",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3002/api/todoItems",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"todoItems"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "toDoItems",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"if(jsonData[0]){",
+							"pm.test(\"Contains any object\", function() {",
+							"    ",
+							"    ",
+							"    pm.collectionVariables.set(\"itemID\",jsonData[0].id)",
+							"    pm.expect(jsonData[0].id).to.eql(pm.collectionVariables.get(\"itemID\"));",
+							"    ",
+							"    ",
+							"",
+							"})",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3002/api/todoItems",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"todoItems"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT todoItems/{{ID}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"pm.test(\"Response has a body\", function () {",
+							"         pm.response.to.have.body;",
+							"",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "en-GB,en;q=0.9,hi-GB;q=0.8,hi;q=0.7,fr-GB;q=0.6,fr;q=0.5,zh-GB;q=0.4,zh;q=0.3,en-US;q=0.2"
+					},
+					{
+						"key": "Connection",
+						"value": "keep-alive"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Origin",
+						"value": "http://localhost:3000"
+					},
+					{
+						"key": "Referer",
+						"value": "http://localhost:3000/"
+					},
+					{
+						"key": "Sec-Fetch-Dest",
+						"value": "empty"
+					},
+					{
+						"key": "Sec-Fetch-Mode",
+						"value": "cors"
+					},
+					{
+						"key": "Sec-Fetch-Site",
+						"value": "same-site"
+					},
+					{
+						"key": "User-Agent",
+						"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\"Chromium\";v=\"110\", \"Not A(Brand\";v=\"24\", \"Google Chrome\";v=\"110\""
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"macOS\""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"id\":\"{{itemID}}\",\"description\":\"string\",\"isCompleted\":true}"
+				},
+				"url": {
+					"raw": "http://localhost:3002/api/todoItems/{{itemID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"todoItems",
+						"{{itemID}}"
+					]
+				},
+				"description": "PUT"
+			},
+			"response": []
+		},
+		{
+			"name": "toDoItems After PUT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let jsonData = pm.response.json(); ",
+							"let itemID = pm.collectionVariables.get(\"itemID\")",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"if(jsonData != \"\"){",
+							"pm.test(\"Should not contain the completed itemID\", function() {",
+							"    ",
+							"    for (obj of jsonData){",
+							"        console.log(obj.id + \"---\"+ itemID)",
+							"        if (obj.id == itemID){",
+							"            pm.expect.fail('ItemID not marked completed by PUT before');",
+							"",
+							"        }",
+							"    }",
+							"})",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3002/api/todoItems",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"todoItems"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "itemID",
+			"value": ""
+		}
+	]
+}
