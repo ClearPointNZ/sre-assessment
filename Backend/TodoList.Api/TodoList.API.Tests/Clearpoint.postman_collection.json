@@ -112,53 +112,6 @@
 			"response": []
 		},
 		{
-			"name": "toDoItems",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"let jsonData = pm.response.json();",
-							"",
-							"if(jsonData[0]){",
-							"pm.test(\"Contains any object\", function() {",
-							"    ",
-							"    ",
-							"    pm.collectionVariables.set(\"itemID\",jsonData[0].id)",
-							"    pm.expect(jsonData[0].id).to.eql(pm.collectionVariables.get(\"itemID\"));",
-							"    ",
-							"    ",
-							"",
-							"})",
-							"}"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:3002/api/todoItems",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3002",
-					"path": [
-						"api",
-						"todoItems"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "PUT todoItems/{{ID}}",
 			"event": [
 				{
