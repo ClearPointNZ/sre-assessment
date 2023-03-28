@@ -30,6 +30,17 @@
 						],
 						"type": "text/javascript"
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var moment = require('moment');",
+							"pm.collectionVariables.set('currentdate', moment().format((\"DD-MM-YYYYTHH:MM:SS\")));",
+							""
+						],
+						"type": "text/javascript"
+					}
 				}
 			],
 			"request": {
@@ -46,7 +57,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"description\": \"test\"\n}"
+					"raw": "{\n  \"description\": \"{{currentdate}}\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:3002/api/todoItems",
@@ -64,7 +75,7 @@
 			"response": []
 		},
 		{
-			"name": "toDoItems After POST",
+			"name": "toDoItems After POST Array should contain the object created",
 			"event": [
 				{
 					"listen": "test",
@@ -77,11 +88,12 @@
 							"});",
 							"",
 							"",
-							"pm.test(\"Contains created object\", function() {",
+							"pm.test(\"Contains object with attributes\", function() {",
 							"      ",
 							"    for (obj of jsonData){",
 							"        if (obj.id === itemID){",
 							"             pm.expect(obj.id).to.be.eq(itemID)",
+							"             pm.expect(obj.isCompleted).to.equal(false)",
 							"        }",
 							"    }",
 							"",
@@ -93,11 +105,22 @@
 					}
 				}
 			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://localhost:3002/api/todoItems",
+					"raw": "http://localhost:3002/api/todoItems/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -105,7 +128,68 @@
 					"port": "3002",
 					"path": [
 						"api",
-						"todoItems"
+						"todoItems",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "toDoItems After POST contains the created object ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let itemID = pm.collectionVariables.get(\"itemID\")",
+							"let jsonData = pm.response.json(); ",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Contains created object with correct attributes\", function() {",
+							"        console.log(jsonData.id)",
+							"        console.log(itemID)",
+							"             pm.expect(jsonData.id).to.be.eq(itemID)",
+							"             pm.expect(jsonData.isCompleted).to.equal(false)",
+							"            ",
+							"    ",
+							"",
+							"",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3002/api/todoItems/{{itemID}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3002",
+					"path": [
+						"api",
+						"todoItems",
+						"{{itemID}}"
 					]
 				}
 			},
@@ -217,24 +301,21 @@
 						"exec": [
 							"let jsonData = pm.response.json(); ",
 							"let itemID = pm.collectionVariables.get(\"itemID\")",
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is 200\",  ()=> {",
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
 							"",
 							"if(jsonData != \"\"){",
-							"pm.test(\"Should not contain the completed itemID\", function() {",
-							"    ",
-							"    for (obj of jsonData){",
-							"        console.log(obj.id + \"---\"+ itemID)",
-							"        if (obj.id == itemID){",
-							"            pm.expect.fail('ItemID not marked completed by PUT before');",
+							"pm.test(\"Should contain the completed itemID with isCompleted true\", ()=> {",
+							"          pm.expect(jsonData.id).equals(itemID)",
+							"          pm.expect(jsonData.description).equals(\"string\")   ",
+							"          pm.expect(jsonData.isCompleted).equals(true)",
+							"          ",
 							"",
-							"        }",
-							"    }",
-							"})",
+							"",
 							"}",
-							""
+							")}"
 						],
 						"type": "text/javascript"
 					}
@@ -244,7 +325,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:3002/api/todoItems",
+					"raw": "http://localhost:3002/api/todoItems/{{itemID}}",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -252,7 +333,8 @@
 					"port": "3002",
 					"path": [
 						"api",
-						"todoItems"
+						"todoItems",
+						"{{itemID}}"
 					]
 				}
 			},
@@ -262,6 +344,10 @@
 	"variable": [
 		{
 			"key": "itemID",
+			"value": ""
+		},
+		{
+			"key": "currentdate",
 			"value": ""
 		}
 	]
