@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - "8.2.1"
+
+install:
+  - npm install newman
+
+before_script:
+  - node --version
+  - npm --version
+  - node_modules/.bin/newman --version
+
+script:
+  - node_modules/.bin/newman run https://api.postman.com/collections/8056849-75c1b5c2-9c5a-439f-b9d5-afc6930b1d65?access_key=${TOKENHERE}
